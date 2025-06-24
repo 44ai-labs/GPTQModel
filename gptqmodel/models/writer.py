@@ -279,14 +279,13 @@ def ModelWriter(cls):
             self.processor.save_pretrained(save_dir)
         # --- end config save block ---
 
-
-
         model.to(CPU)
         state_dict = get_state_dict_for_save(model)
 
         model_base_name = "model"
 
-        state_dict = {k: v.clone().contiguous() for k, v in state_dict.items()}
+        # remove the "model." prefix from the state_dict keys
+        state_dict = {k if not k.startswith("model.") else k[6:]: v.clone().contiguous() for k, v in state_dict.items()}
         model_save_name = model_base_name + ".safetensors"
 
         if not self.qlinear_kernel.SUPPORTS_SHARDS and max_shard_size is not None:

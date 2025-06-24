@@ -359,6 +359,7 @@ class QuantizeConfig():
     def save_pretrained(self, save_dir: str, **kwargs):
         with open(join(save_dir, QUANT_CONFIG_FILENAME), "w", encoding="utf-8") as f:
             d = self.to_dict()
+            d["wbits"] = d["bits"]  # compat: wbits is used in vllm
             json_str = json.dumps(d, indent=2)
             log.info(f"Saved Quantize Config: \n{json_str}")
             f.write(json_str)

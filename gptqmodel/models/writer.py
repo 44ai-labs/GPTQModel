@@ -226,6 +226,7 @@ def ModelWriter(cls):
         # --- start config save block ---
         # Save quantized config
         config.quantization_config = quantize_config.to_dict()
+        config.quantization_config["wbits"] = config.quantization_config["bits"] # needed for vllm
         self.model.config = config
 
         # Save model config, including generation_config
@@ -255,10 +256,30 @@ def ModelWriter(cls):
 
         debug_saved_config(save_dir)
 
+        # manual copy of processor files
+        def debug_processor_files(path):
+            processor_files = [
+                "preprocessor_config.json",
+                "processor_config.json",
+            ]
+            for file_name in processor_files:
+                full_path = os.path.join(path, file_name)
+                if os.path.isfile(full_path):
+                    print(f"Content of saved `{file_name}`:")
+                    with open(full_path, 'r') as processor_file:
+                        processor_data = json.load(processor_file)
+                        print(json.dumps(processor_data, indent=4))
+                else:
+                    print(f"`{file_name}` does not exist in the directory.")
+
+        debug_processor_files(save_dir)
+
         # Save processor related config files. For example: preprocessor_config.json, chat_template.json
         if hasattr(self,"processor") and isinstance(self.processor, ProcessorMixin):
             self.processor.save_pretrained(save_dir)
         # --- end config save block ---
+
+
 
         model.to(CPU)
         state_dict = get_state_dict_for_save(model)

@@ -22,8 +22,8 @@ class Gemma3GPTQ(LlamaGPTQ):
     layer_type = "Gemma3DecoderLayer"
 
 class Gemma3ForConditionalGenerationGPTQ(BaseGPTQModel):
-    base_modules = ["model.language_model.embed_tokens", "model.language_model.norm"]
-    pre_lm_head_norm_module = "model.language_model.norm"
+    # base_modules = ["model.language_model.embed_tokens", "model.language_model.norm"]
+    # pre_lm_head_norm_module = "model.language_model.norm"
 
     layers_node = "model.language_model.layers"
     layer_type = "Gemma3DecoderLayer"
@@ -34,4 +34,4 @@ class Gemma3ForConditionalGenerationGPTQ(BaseGPTQModel):
         ["mlp.down_proj"],
     ]
 
-    lm_head_module = "model.lm_head"
+    # lm_head_module = "model.lm_head"

@@ -21,6 +21,7 @@ from . import LlamaGPTQ
 class Gemma3GPTQ(LlamaGPTQ):
     layer_type = "Gemma3DecoderLayer"
 
+# https://github.com/huggingface/transformers/blob/main/src/transformers/models/gemma3/modeling_gemma3.py
 class Gemma3ForConditionalGenerationGPTQ(BaseGPTQModel):
     base_modules = ["model.language_model.embed_tokens", "model.language_model.norm"]
     pre_lm_head_norm_module = "model.language_model.norm"
